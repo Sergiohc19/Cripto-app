@@ -119,7 +119,7 @@ export const CriptoSearchForm = () => {
         </div>
       </div>
 
-      <input type="submit" value="Cotizar" />
+      <button type="submit">Cotizar</button>
     </form>
   );
 };
