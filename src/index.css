@@ -1,7 +1,10 @@
 :root {
-  --white: #FFF;
-  --PRIMARY: #61ECBC;
+  --white: #fff;
+  --primary: #61ecbc;
+  --primary-dark: #0cb387;
   --black: #182339;
+  --bg-overlay: rgba(255, 255, 255, 0.2);
+  --border-light: rgba(255, 255, 255, 0.5);
 }
 
 html {
@@ -9,47 +12,52 @@ html {
 }
 
 body {
-  background-image: url("/bg.jpg");
+  background-image: url('/bg.jpg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
   min-height: 100vh;
-  font-family: "Outfit", sans-serif;
+  font-family: 'Outfit', sans-serif;
   font-size: 2rem;
+  margin: 0;
+  color: var(--black);
 }
 
 .container {
   max-width: 60rem;
   width: 95%;
   margin: 0 auto;
-  
 }
 
 .app-title {
   font-size: 3.8rem;
   margin-top: 5rem;
-  font-weight: 700;
   color: var(--white);
-  line-height: .8;
-  text-align: center;
+  line-height: 0.8;
+  text-align: start;
 }
 
 .app-title span {
   display: block;
-  color: var(--PRIMARY);
+  color: var(--primary);
   font-size: 4.4rem;
+  text-align: center;
 }
 
 .content {
   margin-top: 5rem;
-  
   padding: 6rem 2rem;
   background-color: var(--white);
   border-radius: 1rem;
-  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+   background: rgba(250, 250, 250, 0.63);
+  backdrop-filter: blur(80pxpx);
+  -webkit-backdrop-filter: blur(80px);
 }
 
-.form, .field  {
+/* Formulario */
+.form,
+.field {
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -57,29 +65,156 @@ body {
 
 .form label {
   color: var(--black);
+  font-weight: 600;
 }
 
-.form select {
-  background-color: #ECEBEB ;
-  border: none;
-  padding: 1rem;
-  border-radius: 1rem;
-  font-size: 1.8rem;
+/* ================
+   DESPLEGABLES PERSONALIZADOS (Glassmorphism)
+   ================ */
+
+.custom-select {
+  position: relative;
+  cursor: pointer;
 }
+
+.select-trigger {
+  padding: 1rem;
+  background: var(--bg-overlay);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px); /* Safari */
+  border: 1px solid var(--border-light);
+  border-radius: 1rem;
+  color: var(--black);
+  font-size: 1.8rem;
+  transition: all 0.2s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.select-trigger:hover {
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 0 2px rgba(97, 236, 188, 0.4);
+}
+
+/* Lista de opciones */
+.select-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 0.5rem;
+  list-style: none;
+  padding: 0;
+  max-height: 40vh;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-light);
+  border-radius: 1rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) transparent;
+}
+
+/* Scroll personalizado */
+.select-options::-webkit-scrollbar {
+  width: 6px;
+}
+
+.select-options::-webkit-scrollbar-thumb {
+  background-color: var(--primary);
+  border-radius: 10px;
+}
+
+.select-options::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Opciones individuales */
+.select-options li {
+  padding: 1rem 1.2rem;
+  color: var(--black);
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.select-options li:hover {
+  background-color: var(--primary-dark);
+  color: var(--white);
+  font-weight: 600;
+}
+
+/* Flecha desplegable */
+.custom-select::after {
+  font-size: 0.9em;
+  opacity: 0.7;
+  margin-left: auto;
+  transition: transform 0.2s ease;
+}
+
+.custom-select[aria-expanded="true"]::after,
+.custom-select:hover::after {
+  transform: rotate(180deg);
+}
+
+/* ================
+   BOTÓN DE ENVÍO
+   ================ */
 
 .form [type="submit"] {
-  background-color: var(--PRIMARY);
+  background-color: var(--primary);
   color: var(--black);
   border: none;
   padding: 1rem;
+  font-size: 1.8rem;
   font-weight: 900;
   cursor: pointer;
   text-transform: uppercase;
   margin-top: 2rem;
-  transition: background-color 380ms ease;
+  border-radius: 1rem;
+  transition: background-color 300ms ease;
 }
 
-.form [type="submit"]:hover  {
-  background-color:#0CB387  ;
+.form [type="submit"]:hover {
+  background-color: var(--primary-dark);
+}
 
+/* ================
+   RESULTADOS
+   ================ */
+
+.result-wrapper {
+  margin-top: 5rem;
+}
+
+.result-wrapper h2 {
+  text-align: center;
+  color: var(--black);
+}
+
+.result {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.result img {
+  width: 100%;
+  border-radius: 0.8rem;
+}
+
+.result p {
+  margin: 0 0 1rem;
+  font-size: 1.6rem;
+  color: var(--black);
+}
+
+.result span {
+  font-weight: 700;
+  color: var(--primary-dark);
 }

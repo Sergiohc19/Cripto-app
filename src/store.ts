@@ -4,7 +4,8 @@ import type { CryptoCurrency } from "./types"
 import { getCryptos } from "./services/CryptoService"
 
 type CryptoStore = {
-
+    isLoading: boolean;
+    error: string | null;
     cryptocurrencies: CryptoCurrency[]
     fetchCryptos: () => Promise<void>
 }
@@ -14,7 +15,7 @@ type CryptoStore = {
 export const useCryptoStore = create<CryptoStore>()(devtools((set) => ({
     cryptocurrencies: [],
     fetchCryptos: async () => {
-       const cryptocurrencies = await getCryptos()
-       set(() => ({ cryptocurrencies }))
+        const cryptocurrencies = await getCryptos()
+        set(() => ({ cryptocurrencies }))
     }
 })))
