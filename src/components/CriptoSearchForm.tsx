@@ -1,25 +1,30 @@
 import { useState, useEffect, useRef } from "react";
 import { useCryptoStore } from "../store";
 import { currencies } from "../data";
+import type { Pair } from "../types";
 
 export const CriptoSearchForm = () => {
   const cryptocurrencies = useCryptoStore((state) => state.cryptocurrencies);
 
-  const [currency, setCurrency] = useState("");
-  const [cryptoCurrency, setCryptoCurrency] = useState("");
+  // ✅ Eliminamos los estados duplicados: usamos SOLO `pair`
+  const [pair, setPair] = useState<Pair>({
+    currency: "",
+    cryptoCurrency: "",
+  });
+
   const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
   const [isCryptoOpen, setIsCryptoOpen] = useState(false);
 
-  // Referencias a los contenedores de cada desplegable
+  // Referencias a los contenedores
   const currencyRef = useRef<HTMLDivElement>(null);
   const cryptoRef = useRef<HTMLDivElement>(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!currency || !cryptoCurrency) return;
-    console.log("Cotizando:", { currency, cryptoCurrency });
+    if (!pair.currency || !pair.cryptoCurrency) return;
+    console.log("Cotizando:", pair);
     // Aquí puedes llamar a una acción del store, por ejemplo:
-    // useCryptoStore.getState().fetchPrice({ currency, cryptoCurrency });
+    // useCryptoStore.getState().fetchPrice(pair);
   };
 
   // Efecto para cerrar al hacer clic fuera
@@ -27,12 +32,10 @@ export const CriptoSearchForm = () => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
 
-      // Si el clic fue fuera del selector de moneda → cerrar
       if (currencyRef.current && !currencyRef.current.contains(target)) {
         setIsCurrencyOpen(false);
       }
 
-      // Si el clic fue fuera del selector de criptomoneda → cerrar
       if (cryptoRef.current && !cryptoRef.current.contains(target)) {
         setIsCryptoOpen(false);
       }
@@ -53,10 +56,11 @@ export const CriptoSearchForm = () => {
           ref={currencyRef}
           className="custom-select"
           onClick={() => setIsCurrencyOpen(!isCurrencyOpen)}
+          // ❌ Eliminamos onChange
         >
           <div className="select-trigger">
-            {currency
-              ? currencies.find((c) => c.code === currency)?.name
+            {pair.currency
+              ? currencies.find((c) => c.code === pair.currency)?.name
               : "-- Seleccione --"}
           </div>
 
@@ -67,7 +71,7 @@ export const CriptoSearchForm = () => {
                   key={curr.code}
                   onClick={(e) => {
                     e.stopPropagation();
-                    setCurrency(curr.code);
+                    setPair({ ...pair, currency: curr.code });
                     setIsCurrencyOpen(false);
                   }}
                 >
@@ -86,11 +90,13 @@ export const CriptoSearchForm = () => {
           ref={cryptoRef}
           className="custom-select"
           onClick={() => setIsCryptoOpen(!isCryptoOpen)}
+          // ❌ Eliminamos onChange
         >
           <div className="select-trigger">
-            {cryptoCurrency
-              ? cryptocurrencies.find((c) => c.CoinInfo.Name === cryptoCurrency)
-                  ?.CoinInfo.FullName
+            {pair.cryptoCurrency
+              ? cryptocurrencies.find(
+                  (c) => c.CoinInfo.Name === pair.cryptoCurrency
+                )?.CoinInfo.FullName
               : "-- Seleccione --"}
           </div>
 
@@ -98,10 +104,10 @@ export const CriptoSearchForm = () => {
             <ul className="select-options">
               {cryptocurrencies.map((crypto) => (
                 <li
-                  key={crypto.CoinInfo.FullName}
+                  key={crypto.CoinInfo.Name}
                   onClick={(e) => {
                     e.stopPropagation();
-                    setCryptoCurrency(crypto.CoinInfo.Name);
+                    setPair({ ...pair, cryptoCurrency: crypto.CoinInfo.Name });
                     setIsCryptoOpen(false);
                   }}
                 >
