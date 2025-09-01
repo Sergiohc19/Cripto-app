@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useCryptoStore } from "../store";
 import { currencies } from "../data";
 import type { Pair } from "../types";
+import { ErrorMessage } from "./ErrorMessage";
 
 export const CriptoSearchForm = () => {
   const cryptocurrencies = useCryptoStore((state) => state.cryptocurrencies);
@@ -12,6 +13,7 @@ export const CriptoSearchForm = () => {
     cryptoCurrency: "",
   });
 
+  const [error, setError] = useState("")
   const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
   const [isCryptoOpen, setIsCryptoOpen] = useState(false);
 
@@ -19,13 +21,17 @@ export const CriptoSearchForm = () => {
   const currencyRef = useRef<HTMLDivElement>(null);
   const cryptoRef = useRef<HTMLDivElement>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!pair.currency || !pair.cryptoCurrency) return;
-    console.log("Cotizando:", pair);
-    // Aquí puedes llamar a una acción del store, por ejemplo:
-    // useCryptoStore.getState().fetchPrice(pair);
-  };
+ const handleSubmit = (e: React.FormEvent) => {
+  e.preventDefault();
+
+  if (!pair.currency || !pair.cryptoCurrency) {
+    setError("Todos los campos son obligatorios");
+    return;
+  }
+
+  setError(""); // ✅ Limpia si todo está bien
+  console.log("Cotizando:", pair);
+};
 
   // Efecto para cerrar al hacer clic fuera
   useEffect(() => {
@@ -49,6 +55,8 @@ export const CriptoSearchForm = () => {
 
   return (
     <form className="form" onSubmit={handleSubmit}>
+
+      {error && <ErrorMessage>{error}</ErrorMessage>}
       {/* Selector de Moneda */}
       <div className="field">
         <label>Moneda:</label>
