@@ -12,9 +12,7 @@ export const CryptoCurrencyResponseSchema = z.object({
         // Datos generales
         FullName: z.string(),
         Name: z.string(),
-        ImageUrl: z.string(),
-        AssetLaunchDate: z.string(), // Fecha de lanzamiento
-        MaxSupply: z.number(),       // Oferta máxima
+     
     }),
     //   RAW: z.object({
     //     USD: z.object({
@@ -31,5 +29,15 @@ export const CryptoCurrenciesResponseSchema = z.array(CryptoCurrencyResponseSche
 
 export const PairSchema = z.object({
     currency: z.string(),
-    cryptoCurrency: z.string()
+    cryptocurrency: z.string()
 });
+
+export const CryptoPriceSchema = z.object({
+    IMAGEURL : z.string(),
+    PRICE: z.string(),
+    HIGDAY: z.string(),
+    LOWDAY: z.string(),
+    HIGH24HOUR: z.string(),
+    LASTUPDATE: z.string(),
+    HIGHHOUR: z.string()
+})

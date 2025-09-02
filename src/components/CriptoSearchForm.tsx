@@ -11,7 +11,7 @@ export const CriptoSearchForm = () => {
   // ✅ Eliminamos los estados duplicados: usamos SOLO `pair`
   const [pair, setPair] = useState<Pair>({
     currency: "",
-    cryptoCurrency: "",
+    cryptocurrency: "",
   });
 
   const [error, setError] = useState("")
@@ -25,7 +25,7 @@ export const CriptoSearchForm = () => {
  const handleSubmit = (e: React.FormEvent) => {
   e.preventDefault();
 
-  if (!pair.currency || !pair.cryptoCurrency) {
+  if (!pair.currency || !pair.cryptocurrency) {
     setError("Todos los campos son obligatorios");
     fetchData(pair)
     return;
@@ -103,9 +103,9 @@ export const CriptoSearchForm = () => {
           // ❌ Eliminamos onChange
         >
           <div className="select-trigger">
-            {pair.cryptoCurrency
+            {pair.cryptocurrency
               ? cryptocurrencies.find(
-                  (c) => c.CoinInfo.Name === pair.cryptoCurrency
+                  (c) => c.CoinInfo.Name === pair.cryptocurrency
                 )?.CoinInfo.FullName
               : "-- Seleccione --"}
           </div>
@@ -117,7 +117,7 @@ export const CriptoSearchForm = () => {
                   key={crypto.CoinInfo.Name}
                   onClick={(e) => {
                     e.stopPropagation();
-                    setPair({ ...pair, cryptoCurrency: crypto.CoinInfo.Name });
+                    setPair({ ...pair, cryptocurrency: crypto.CoinInfo.Name });
                     setIsCryptoOpen(false);
                   }}
                 >
