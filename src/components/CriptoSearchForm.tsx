@@ -22,17 +22,17 @@ export const CriptoSearchForm = () => {
   const currencyRef = useRef<HTMLDivElement>(null);
   const cryptoRef = useRef<HTMLDivElement>(null);
 
- const handleSubmit = (e: React.FormEvent) => {
+const handleSubmit = (e: React.FormEvent) => {
   e.preventDefault();
 
   if (!pair.currency || !pair.cryptocurrency) {
     setError("Todos los campos son obligatorios");
-    fetchData(pair)
-    return;
+    return; // ❌ No llames a fetchData
   }
 
-  setError(""); // ✅ Limpia si todo está bien
+  setError("");
   console.log("Cotizando:", pair);
+  fetchData(pair); // ✅ Llama aquí, cuando todo está bien
 };
 
   // Efecto para cerrar al hacer clic fuera

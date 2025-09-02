@@ -35,7 +35,7 @@ export const PairSchema = z.object({
 export const CryptoPriceSchema = z.object({
     IMAGEURL : z.string(),
     PRICE: z.string(),
-    HIGDAY: z.string(),
+    HIGHDAY: z.string(),
     LOWDAY: z.string(),
     HIGH24HOUR: z.string(),
     LASTUPDATE: z.string(),

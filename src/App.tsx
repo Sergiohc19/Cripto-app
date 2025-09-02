@@ -20,6 +20,7 @@ useEffect(() => {
 
       <div className="content">
         <CriptoSearchForm />
+        
       </div>
     </div>
   );
