@@ -1,17 +1,19 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { CriptoSearchForm } from "./components/CriptoSearchForm";
 import { useCryptoStore } from "./store";
 import { CryptoPriceDisplay } from "./components/CryptoPriceDisplay";
 
-
-
 export const App = () => {
+  const fetchCryptos = useCryptoStore((state) => state.fetchCryptos);
+  const [showResult, setShowResult] = useState(false);
 
-const fetchCryptos = useCryptoStore((state) => state.fetchCryptos)
+  useEffect(() => {
+    fetchCryptos();
+  }, [fetchCryptos]);
 
-useEffect(() => {
-  fetchCryptos()
-}, [fetchCryptos])
+  const handleQuote = () => {
+    setShowResult(true);
+  };
 
   return (
     <div className="container">
@@ -19,11 +21,15 @@ useEffect(() => {
         Cotizador de <span>Criptomonedas</span>
       </h1>
 
-      <div className="content">
-        <CriptoSearchForm />
-        <CryptoPriceDisplay />
+      <section className="content">
+        <CriptoSearchForm onQuote={handleQuote} />
+      </section>
 
-      </div>
+      {showResult && (
+        <section className="content-wrapper">
+          <CryptoPriceDisplay />
+        </section>
+      )}
     </div>
   );
 };
