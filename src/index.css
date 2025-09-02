@@ -138,6 +138,7 @@ body {
 .select-options li {
   padding: 1rem 1.2rem;
   color: var(--black);
+  font-weight:700;
   cursor: pointer;
   transition: background-color 0.2s, color 0.2s;
 }

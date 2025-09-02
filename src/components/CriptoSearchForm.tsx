@@ -6,6 +6,7 @@ import { ErrorMessage } from "./ErrorMessage";
 
 export const CriptoSearchForm = () => {
   const cryptocurrencies = useCryptoStore((state) => state.cryptocurrencies);
+  const fetchData = useCryptoStore((state) => state.fetchData);
 
   // ✅ Eliminamos los estados duplicados: usamos SOLO `pair`
   const [pair, setPair] = useState<Pair>({
@@ -26,6 +27,7 @@ export const CriptoSearchForm = () => {
 
   if (!pair.currency || !pair.cryptoCurrency) {
     setError("Todos los campos son obligatorios");
+    fetchData(pair)
     return;
   }
 
