@@ -7,11 +7,11 @@ import { CryptoPriceDisplay } from "./components/CryptoPriceDisplay";
 
 export const App = () => {
 
-const fetchCryptos = useCryptoStore((state) => state.fetchCryptos)
+  const fetchCryptos = useCryptoStore((state) => state.fetchCryptos)
 
-useEffect(() => {
-  fetchCryptos()
-}, [fetchCryptos])
+  useEffect(() => {
+    fetchCryptos()
+  }, [fetchCryptos])
 
   return (
     <div className="container">
@@ -19,11 +19,14 @@ useEffect(() => {
         Cotizador de <span>Criptomonedas</span>
       </h1>
 
-      <div className="content">
+      <section className="content">
         <CriptoSearchForm />
-        <CryptoPriceDisplay />
 
-      </div>
+
+      </section>
+      <section className="content-result">
+        <CryptoPriceDisplay />
+        </section>
     </div>
   );
 };
