@@ -1,7 +1,9 @@
 import { useEffect } from "react";
+import "./index.css"
 import { CriptoSearchForm } from "./components/CriptoSearchForm";
 import { useCryptoStore } from "./store";
 import { CryptoPriceDisplay } from "./components/CryptoPriceDisplay";
+import { CryptoChartDisplay } from "./components/CryptoChartDisplay"; // ✅ Usa el componente contenedor
 
 export const App = () => {
   const fetchCryptos = useCryptoStore((state) => state.fetchCryptos);
@@ -22,10 +24,20 @@ export const App = () => {
       </section>
 
       {hasQuoted && (
-        <section className="content-result">
-          <CryptoPriceDisplay />
-        </section>
+        <>
+          <section className="container-results">
+            <article className="content-result">
+              <CryptoPriceDisplay />
+            </article>
+
+            <article>
+              <CryptoChartDisplay />
+            </article>
+          </section>
+        </>
       )}
+
+
     </div>
   );
 };

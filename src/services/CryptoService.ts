@@ -28,3 +28,19 @@ export async function fetchCurrentCryptoPrice(pair: Pair) {
 
   throw new Error("No se pudo obtener el precio.");
 }
+
+
+export async function fetchCryptoHistory(pair: Pair) {
+  const url = `https://min-api.cryptocompare.com/data/v2/histohour?fsym=${pair.cryptocurrency}&tsym=${pair.currency}&limit=24`;
+
+  const response = await axios.get(url);
+
+  // La data está en response.data.Data.Data (sí, doble Data)
+  const rawData = response.data.Data.Data;
+
+  // Devolver un array con { time, close } para el gráfico
+  return rawData.map((point: any) => ({
+    time: point.time,
+    close: point.close,
+  }));
+}
