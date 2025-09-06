@@ -5,41 +5,37 @@ import type { Pair } from "../types";
 import { ErrorMessage } from "./ErrorMessage";
 
 export const CriptoSearchForm = () => {
-  // Traemos del store
   const cryptocurrencies = useCryptoStore((state) => state.cryptocurrencies);
   const fetchData = useCryptoStore((state) => state.fetchData);
-  const fetchCryptos = useCryptoStore((state) => state.fetchCryptos);
 
-  // Estado del formulario
+  // ✅ Eliminamos los estados duplicados: usamos SOLO `pair`
   const [pair, setPair] = useState<Pair>({
     currency: "",
     cryptocurrency: "",
   });
-  const [error, setError] = useState("");
+
+  const [error, setError] = useState("")
   const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
   const [isCryptoOpen, setIsCryptoOpen] = useState(false);
 
+  // Referencias a los contenedores
   const currencyRef = useRef<HTMLDivElement>(null);
   const cryptoRef = useRef<HTMLDivElement>(null);
 
-  // Al montar, traemos las cryptos desde la API
-  useEffect(() => {
-    fetchCryptos();
-  }, [fetchCryptos]);
+const handleSubmit = (e: React.FormEvent) => {
+  e.preventDefault();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  if (!pair.currency || !pair.cryptocurrency) {
+    setError("Todos los campos son obligatorios");
+    return; // ❌ No llames a fetchData
+  }
 
-    if (!pair.currency || !pair.criptocurrency) {
-      setError("Todos los campos son obligatorios");
-      return;
-    }
+  setError("");
+  console.log("Cotizando:", pair);
+  fetchData(pair); // ✅ Llama aquí, cuando todo está bien
+};
 
-    setError("");
-    fetchData(pair);
-  };
-
-  // Cerrar dropdown al hacer clic fuera
+  // Efecto para cerrar al hacer clic fuera
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
@@ -61,8 +57,8 @@ export const CriptoSearchForm = () => {
 
   return (
     <form className="form" onSubmit={handleSubmit}>
-      {error && <ErrorMessage>{error}</ErrorMessage>}
 
+      {error && <ErrorMessage>{error}</ErrorMessage>}
       {/* Selector de Moneda */}
       <div className="field">
         <label>Moneda:</label>
@@ -70,10 +66,11 @@ export const CriptoSearchForm = () => {
           ref={currencyRef}
           className="custom-select"
           onClick={() => setIsCurrencyOpen(!isCurrencyOpen)}
+          // ❌ Eliminamos onChange
         >
           <div className="select-trigger">
             {pair.currency
-              ? currencies.find((c) => c.code === pair.currency)?.name ?? "-- Seleccione --"
+              ? currencies.find((c) => c.code === pair.currency)?.name
               : "-- Seleccione --"}
           </div>
 
@@ -103,12 +100,13 @@ export const CriptoSearchForm = () => {
           ref={cryptoRef}
           className="custom-select"
           onClick={() => setIsCryptoOpen(!isCryptoOpen)}
+          // ❌ Eliminamos onChange
         >
           <div className="select-trigger">
             {pair.cryptocurrency
               ? cryptocurrencies.find(
                   (c) => c.CoinInfo.Name === pair.cryptocurrency
-                )?.CoinInfo.FullName ?? "-- Seleccione --"
+                )?.CoinInfo.FullName
               : "-- Seleccione --"}
           </div>
 
@@ -123,7 +121,7 @@ export const CriptoSearchForm = () => {
                     setIsCryptoOpen(false);
                   }}
                 >
-                  {crypto.CoinInfo.FullName ?? crypto.CoinInfo.Name} ({crypto.CoinInfo.Name})
+                  {crypto.CoinInfo.FullName} ({crypto.CoinInfo.Name})
                 </li>
               ))}
             </ul>
