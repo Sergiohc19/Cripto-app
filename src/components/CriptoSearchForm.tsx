@@ -7,35 +7,34 @@ import { ErrorMessage } from "./ErrorMessage";
 export const CriptoSearchForm = () => {
   const cryptocurrencies = useCryptoStore((state) => state.cryptocurrencies);
   const fetchData = useCryptoStore((state) => state.fetchData);
+  const setHasQuoted = useCryptoStore((state) => state.setHasQuoted);
 
-  // ✅ Eliminamos los estados duplicados: usamos SOLO `pair`
   const [pair, setPair] = useState<Pair>({
     currency: "",
     cryptocurrency: "",
   });
 
-  const [error, setError] = useState("")
+  const [error, setError] = useState("");
   const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
   const [isCryptoOpen, setIsCryptoOpen] = useState(false);
 
-  // Referencias a los contenedores
   const currencyRef = useRef<HTMLDivElement>(null);
   const cryptoRef = useRef<HTMLDivElement>(null);
 
-const handleSubmit = (e: React.FormEvent) => {
-  e.preventDefault();
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
 
-  if (!pair.currency || !pair.cryptocurrency) {
-    setError("Todos los campos son obligatorios");
-    return; // ❌ No llames a fetchData
-  }
+    if (!pair.currency || !pair.cryptocurrency) {
+      setError("Todos los campos son obligatorios");
+      return;
+    }
 
-  setError("");
-  console.log("Cotizando:", pair);
-  fetchData(pair); // ✅ Llama aquí, cuando todo está bien
-};
+    setError("");
+    fetchData(pair);
+    setHasQuoted(true); // ✅ Mostrar resultado
+  };
 
-  // Efecto para cerrar al hacer clic fuera
+  // Cerrar dropdowns al hacer clic fuera
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
@@ -57,8 +56,8 @@ const handleSubmit = (e: React.FormEvent) => {
 
   return (
     <form className="form" onSubmit={handleSubmit}>
-
       {error && <ErrorMessage>{error}</ErrorMessage>}
+
       {/* Selector de Moneda */}
       <div className="field">
         <label>Moneda:</label>
@@ -66,7 +65,6 @@ const handleSubmit = (e: React.FormEvent) => {
           ref={currencyRef}
           className="custom-select"
           onClick={() => setIsCurrencyOpen(!isCurrencyOpen)}
-          // ❌ Eliminamos onChange
         >
           <div className="select-trigger">
             {pair.currency
@@ -82,6 +80,7 @@ const handleSubmit = (e: React.FormEvent) => {
                   onClick={(e) => {
                     e.stopPropagation();
                     setPair({ ...pair, currency: curr.code });
+                    setHasQuoted(false); // ✅ Oculta resultado al cambiar
                     setIsCurrencyOpen(false);
                   }}
                 >
@@ -100,7 +99,6 @@ const handleSubmit = (e: React.FormEvent) => {
           ref={cryptoRef}
           className="custom-select"
           onClick={() => setIsCryptoOpen(!isCryptoOpen)}
-          // ❌ Eliminamos onChange
         >
           <div className="select-trigger">
             {pair.cryptocurrency
@@ -118,6 +116,7 @@ const handleSubmit = (e: React.FormEvent) => {
                   onClick={(e) => {
                     e.stopPropagation();
                     setPair({ ...pair, cryptocurrency: crypto.CoinInfo.Name });
+                    setHasQuoted(false); // ✅ Oculta resultado al cambiar
                     setIsCryptoOpen(false);
                   }}
                 >

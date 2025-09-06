@@ -3,15 +3,13 @@ import { CriptoSearchForm } from "./components/CriptoSearchForm";
 import { useCryptoStore } from "./store";
 import { CryptoPriceDisplay } from "./components/CryptoPriceDisplay";
 
-
-
 export const App = () => {
-
-  const fetchCryptos = useCryptoStore((state) => state.fetchCryptos)
+  const fetchCryptos = useCryptoStore((state) => state.fetchCryptos);
+  const hasQuoted = useCryptoStore((state) => state.hasQuoted);
 
   useEffect(() => {
-    fetchCryptos()
-  }, [fetchCryptos])
+    fetchCryptos();
+  }, [fetchCryptos]);
 
   return (
     <div className="container">
@@ -21,12 +19,13 @@ export const App = () => {
 
       <section className="content">
         <CriptoSearchForm />
-
-
       </section>
-      <section className="content-result">
-        <CryptoPriceDisplay />
+
+      {hasQuoted && (
+        <section className="content-result">
+          <CryptoPriceDisplay />
         </section>
+      )}
     </div>
   );
 };
