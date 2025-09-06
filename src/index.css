@@ -25,7 +25,7 @@ body {
 
 .container {
   max-width: 60rem;
-  width: 95%;
+  width: 100%;
   margin: 0 auto;
 }
 
@@ -190,20 +190,26 @@ body {
 
 
 .container-results {
+  width: 100%;
+  max-width: 1400px; /* ✅ Ancho máximo */
+  margin: 3rem auto; /* ✅ Centrado con margen vertical */
+  padding: 0 2rem; /* ✅ Margen interno lateral */
   display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+  gap: 4rem; /* ✅ Espacio razonable entre elementos */
+  flex-wrap: nowrap;
+  justify-content: center;
 }
 
 .container-results article {
-  flex: 1 1 48%;
+  flex: 1 1 100%;
+  min-width: 500px;
 }
-
 
 
 .content-result {
   margin-block: 3rem;
-  padding: 6rem 2rem;
+  height: auto;
+  padding: 2rem 3rem;
   background-color: var(--white);
   border-radius: 1rem;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
@@ -213,10 +219,10 @@ body {
   
 }
 
-
 .content-chart {
   margin-block: 3rem;
-  padding: 6rem 2rem;
+  min-width: 100%;
+  padding: 7rem 5rem;
   background-color: var(--white);
   border-radius: 1rem;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
@@ -226,8 +232,8 @@ body {
 }
 
 .chart-container {
-    margin-block: 3rem;
-  padding: 6rem 2rem;
+  margin-block: 3rem;
+  padding: 1rem 1rem;
   background-color: var(--white);
   border-radius: 1rem;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
@@ -235,7 +241,6 @@ body {
   backdrop-filter: blur(80px);
   -webkit-backdrop-filter: blur(80px);
 }
-
 
 
 .result-wrapper {
