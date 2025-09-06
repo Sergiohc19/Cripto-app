@@ -1,9 +1,11 @@
 import { useCryptoStore } from "../store";
-import { Line } from "react-chartjs-2";
-import "../index.css"
+import { Line, Bar } from "react-chartjs-2";
+
+import "../index.css";
 import {
   Chart as ChartJS,
   LineElement,
+  BarElement,
   PointElement,
   LinearScale,
   TimeScale,
@@ -14,7 +16,15 @@ import {
 import "chartjs-adapter-date-fns";
 
 // Registrar componentes de ChartJS
-ChartJS.register(LineElement, PointElement, LinearScale, TimeScale, Tooltip, Legend);
+ChartJS.register(
+  LineElement,
+  BarElement,
+  PointElement,
+  LinearScale,
+  TimeScale,
+  Tooltip,
+  Legend
+);
 
 export const CryptoChartDisplay = () => {
   // Obtener datos y moneda del store
@@ -26,7 +36,7 @@ export const CryptoChartDisplay = () => {
     return null;
   }
 
-  // Preparar datos para ChartJS
+  // Preparar datos para ChartJS (misma estructura para ambos)
   const data = {
     datasets: [
       {
@@ -36,14 +46,14 @@ export const CryptoChartDisplay = () => {
           y: point.close,
         })),
         borderColor: "#F0B90A",
-        backgroundColor: "rgba(75,192,192,0.2)",
-        tension: 0.2,
+        backgroundColor: "rgba(255, 153, 0, 0.98)",
+        tension: 0.2, // sólo para línea
       },
     ],
   };
 
-  // Opciones para ChartJS
-  const options: ChartOptions<"line"> = {
+  // Opciones para gráfico de línea
+  const lineOptions: ChartOptions<"line"> = {
     responsive: true,
     scales: {
       x: {
@@ -59,7 +69,48 @@ export const CryptoChartDisplay = () => {
           text: "Hora",
         },
         ticks: {
-          maxTicksLimit: 24,
+          maxTicksLimit: 36,
+          autoSkip: true,
+        },
+      },
+      y: {
+        beginAtZero: false,
+        title: {
+          display: true,
+          text: `Precio (${pair.currency})`,
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        display: false,
+        position: "top",
+      },
+      tooltip: {
+        mode: "index",
+        intersect: false,
+      },
+    },
+  };
+
+  // Opciones para gráfico de barras
+  const barOptions: ChartOptions<"bar"> = {
+    responsive: true,
+    scales: {
+      x: {
+        type: "time",
+        time: {
+          unit: "hour",
+          displayFormats: {
+            hour: "HH:mm",
+          },
+        },
+        title: {
+          display: true,
+          text: "Hora",
+        },
+        ticks: {
+          maxTicksLimit: 36,
           autoSkip: true,
         },
       },
@@ -85,7 +136,11 @@ export const CryptoChartDisplay = () => {
 
   return (
     <div className="chart-container">
-      <Line data={data} options={options} />
+      <h3>Gráfico de Línea</h3>
+      <Line data={data} options={lineOptions} />
+
+      <h3>Gráfico de Barras</h3>
+      <Bar data={data} options={barOptions} />
     </div>
   );
 };
