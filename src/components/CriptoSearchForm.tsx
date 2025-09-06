@@ -6,6 +6,7 @@ import { ErrorMessage } from "./ErrorMessage";
 
 export const CriptoSearchForm = () => {
   const cryptocurrencies = useCryptoStore((state) => state.cryptocurrencies);
+  const fetchCryptos = useCryptoStore((state) => state.fetchCryptos);
   const fetchData = useCryptoStore((state) => state.fetchData);
   const setHasQuoted = useCryptoStore((state) => state.setHasQuoted);
 
@@ -21,6 +22,13 @@ export const CriptoSearchForm = () => {
   const currencyRef = useRef<HTMLDivElement>(null);
   const cryptoRef = useRef<HTMLDivElement>(null);
 
+  // Cargar criptomonedas al montar
+  useEffect(() => {
+    fetchCryptos();
+  }, [fetchCryptos]);
+
+  const topCryptocurrencies = cryptocurrencies.slice(0, 20);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -31,7 +39,7 @@ export const CriptoSearchForm = () => {
 
     setError("");
     fetchData(pair);
-    setHasQuoted(true); // ✅ Mostrar resultado
+    setHasQuoted(true); // Mostrar resultado
   };
 
   // Cerrar dropdowns al hacer clic fuera
@@ -54,6 +62,20 @@ export const CriptoSearchForm = () => {
     };
   }, []);
 
+  const handleCurrencySelect = (currCode: string) => {
+    setPair((prev) => ({ ...prev, currency: currCode }));
+    setError("");
+    setHasQuoted(false);
+    setIsCurrencyOpen(false);
+  };
+
+  const handleCryptoSelect = (cryptoName: string) => {
+    setPair((prev) => ({ ...prev, cryptocurrency: cryptoName }));
+    setError("");
+    setHasQuoted(false);
+    setIsCryptoOpen(false);
+  };
+
   return (
     <form className="form" onSubmit={handleSubmit}>
       {error && <ErrorMessage>{error}</ErrorMessage>}
@@ -64,7 +86,7 @@ export const CriptoSearchForm = () => {
         <div
           ref={currencyRef}
           className="custom-select"
-          onClick={() => setIsCurrencyOpen(!isCurrencyOpen)}
+          onClick={() => setIsCurrencyOpen((open) => !open)}
         >
           <div className="select-trigger">
             {pair.currency
@@ -79,9 +101,7 @@ export const CriptoSearchForm = () => {
                   key={curr.code}
                   onClick={(e) => {
                     e.stopPropagation();
-                    setPair({ ...pair, currency: curr.code });
-                    setHasQuoted(false); // ✅ Oculta resultado al cambiar
-                    setIsCurrencyOpen(false);
+                    handleCurrencySelect(curr.code);
                   }}
                 >
                   {curr.name} ({curr.code})
@@ -98,7 +118,7 @@ export const CriptoSearchForm = () => {
         <div
           ref={cryptoRef}
           className="custom-select"
-          onClick={() => setIsCryptoOpen(!isCryptoOpen)}
+          onClick={() => setIsCryptoOpen((open) => !open)}
         >
           <div className="select-trigger">
             {pair.cryptocurrency
@@ -110,14 +130,12 @@ export const CriptoSearchForm = () => {
 
           {isCryptoOpen && (
             <ul className="select-options">
-              {cryptocurrencies.map((crypto) => (
+              {topCryptocurrencies.map((crypto) => (
                 <li
                   key={crypto.CoinInfo.Name}
                   onClick={(e) => {
                     e.stopPropagation();
-                    setPair({ ...pair, cryptocurrency: crypto.CoinInfo.Name });
-                    setHasQuoted(false); // ✅ Oculta resultado al cambiar
-                    setIsCryptoOpen(false);
+                    handleCryptoSelect(crypto.CoinInfo.Name);
                   }}
                 >
                   {crypto.CoinInfo.FullName} ({crypto.CoinInfo.Name})

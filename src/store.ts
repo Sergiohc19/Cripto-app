@@ -31,9 +31,12 @@ export const useCryptoStore = create<CryptoStore>()(
     fetchCryptos: async () => {
       try {
         const cryptocurrencies = await getCryptos();
+        console.log("fetchCryptos - criptomonedas recibidas:", cryptocurrencies);
         set(() => ({ cryptocurrencies }));
       } catch (error) {
-        set({ error: (error as Error).message || "Error fetching cryptocurrencies" });
+        const message = (error as Error).message || "Error fetching cryptocurrencies";
+        console.error(message);
+        set({ error: message });
       }
     },
 
@@ -51,8 +54,10 @@ export const useCryptoStore = create<CryptoStore>()(
           error: null,
         }));
       } catch (error) {
+        const message = (error as Error).message || "Error fetching data";
+        console.error(message);
         set({
-          error: (error as Error).message || "Error fetching data",
+          error: message,
           isLoading: false,
         });
       }
