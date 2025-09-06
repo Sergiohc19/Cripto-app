@@ -5,24 +5,11 @@ export const CurrencySchema = z.object({
     name: z.string()
 });
 
-
-
 export const CryptoCurrencyResponseSchema = z.object({
     CoinInfo: z.object({
-        // Datos generales
         FullName: z.string(),
         Name: z.string(),
-     
     }),
-    //   RAW: z.object({
-    //     USD: z.object({
-    //       // Precios clave
-    //       PRICE: z.number(),          
-    //       OPEN24HOUR: z.number(),      
-    //       LOW24HOUR: z.number(),      
-    //       OPENHOUR: z.number(),        
-    //     }),
-    //   }),
 });
 
 export const CryptoCurrenciesResponseSchema = z.array(CryptoCurrencyResponseSchema);
@@ -40,4 +27,4 @@ export const CryptoPriceSchema = z.object({
     HIGH24HOUR: z.string(),
     LASTUPDATE: z.string(),
     HIGHHOUR: z.string()
-})
+});

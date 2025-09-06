@@ -1,7 +1,7 @@
-import { create } from "zustand"
+import { create } from "zustand";
 import { devtools } from 'zustand/middleware';
-import type { CryptoCurrency, CryptoPrice, Pair } from "./types"
-import { getCryptos, fetchCurrentCryptoPrice } from "./services/CryptoService"
+import type { CryptoCurrency, CryptoPrice, Pair } from "./types";
+import { getCryptos, fetchCurrentCryptoPrice } from "./services/CryptoService";
 
 type CryptoStore = {
     isLoading: boolean;
