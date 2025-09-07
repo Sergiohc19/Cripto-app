@@ -1,35 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect } from "react";
+import "./index.css"
+import { CriptoSearchForm } from "./components/CriptoSearchForm";
+import { useCryptoStore } from "./store";
+import { CryptoPriceDisplay } from "./components/CryptoPriceDisplay";
+import { CryptoChartDisplay } from "./components/CryptoChartDisplay"; // ✅ Usa el componente contenedor
 
-function App() {
-  const [count, setCount] = useState(0)
+export const App = () => {
+  const fetchCryptos = useCryptoStore((state) => state.fetchCryptos);
+  const hasQuoted = useCryptoStore((state) => state.hasQuoted);
+
+  useEffect(() => {
+    fetchCryptos();
+  }, [fetchCryptos]);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div className="container">
+      <h1 className="app-title">
+        Cotizador de <span>Criptomonedas</span>
+      </h1>
 
-export default App
+      <section className="content">
+        <CriptoSearchForm />
+      </section>
+
+      {hasQuoted && (
+        <>
+          <section className="container-results">
+            <article className="content-result">
+              <CryptoPriceDisplay />
+            </article>
+
+            <article>
+              <CryptoChartDisplay />
+            </article>
+          </section>
+        </>
+      )}
+
+
+    </div>
+  );
+};
