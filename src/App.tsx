@@ -16,7 +16,7 @@ export const App = () => {
   return (
     <div className="container">
       <h1 className="app-title">
-        Cotizador de <span>Criptomonedas</span>
+       Crypto<span>ValueTracker</span>
       </h1>
 
       <section className="content">
