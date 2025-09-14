@@ -1,10 +1,13 @@
 {
   "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
-  "staticHeaders": [
+  "headers": [
     {
-      "source": "**/*.mp4",
+      "source": "/(.*)\\.mp4$",
       "headers": [
-        { "key": "Content-Type", "value": "video/mp4" }
+        {
+          "key": "Content-Type",
+          "value": "video/mp4"
+        }
       ]
     }
   ]
