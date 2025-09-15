@@ -1,4 +1,3 @@
-// store.ts
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import type { CryptoCurrency, CryptoPrice, Pair } from "./types";
@@ -38,8 +37,8 @@ export const useCryptoStore = create<CryptoStore>()(
       set({ cryptoLoading: true, error: null });
       try {
         const cryptocurrencies = await getCryptos();
-        console.log("✅ Criptomonedas cargadas:", cryptocurrencies.length, "items");
-        set(() => ({ cryptocurrencies, cryptoLoading: false }));
+        console.log("fetchCryptos - criptomonedas recibidas:", cryptocurrencies);
+        set(() => ({ cryptocurrencies }));
       } catch (error) {
         const message = (error as Error).message || "Error al cargar criptomonedas";
         console.error("❌ Error en fetchCryptos:", message);
@@ -68,8 +67,8 @@ export const useCryptoStore = create<CryptoStore>()(
           error: null,
         });
       } catch (error) {
-        const message = (error as Error).message || "Error al obtener datos";
-        console.error("❌ Error en fetchData:", message);
+        const message = (error as Error).message || "Error fetching data";
+        console.error(message);
         set({
           error: message,
           isLoading: false,

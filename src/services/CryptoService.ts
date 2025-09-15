@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 import { CryptoCurrencyResponseSchema, CryptoPriceSchema } from "../schema/crypto-schema";
 import type { Pair } from "../types";
@@ -107,6 +106,8 @@ export async function fetchCurrentCryptoPrice(pair: Pair) {
     console.error("❌ Error al obtener precio:", error);
     throw new Error("No se pudo obtener el precio.");
   }
+
+  throw new Error("No se pudo obtener el precio.");
 }
 
 export async function fetchCryptoHistory(pair: Pair, limit = 24) {
