@@ -202,7 +202,7 @@ body {
   font-weight: 700;
   cursor: pointer;
   transition: background-color 0.2s, color 0.2s;
-  
+
 
 }
 
@@ -219,13 +219,13 @@ body {
   opacity: 0.7;
   margin-left: auto;
   transition: transform 0.2s ease;
-  
+
 }
 
 .custom-select[aria-expanded="true"]::after,
 .custom-select:hover::after {
   transform: rotate(180deg);
-  
+
 }
 
 /* ================
@@ -281,7 +281,7 @@ body {
 }
 
 .container-results .chart-container {
-  min-width: 65rem;
+  min-width: 60rem;
   height: auto;
 }
 
@@ -295,6 +295,7 @@ body {
   -webkit-backdrop-filter: blur(80px);
 }
 
+/* 
 .content-chart {
   margin-block: 2rem 1rem;
   background-color: var(--white);
@@ -303,7 +304,7 @@ body {
   background: rgba(250, 250, 250, 0.63);
   backdrop-filter: blur(80px);
   -webkit-backdrop-filter: blur(80px);
-}
+} */
 
 .chart-container {
   display: flex;
@@ -355,4 +356,63 @@ body {
 .content-wrapper span {
   font-weight: bold;
   color: var(--primary-dark);
+}
+
+
+
+/* Estilos de Gráficos */
+.chart-container {
+  width: 100%;
+  max-width: 1000px;
+  /* Aumentamos el ancho máximo */
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Contenedor de cada gráfico */
+.chart-wrapper {
+  width: 100%;
+  height: 400px;
+  margin-bottom: 2vh;
+  border-radius: 10px;
+  padding: 2rem;
+}
+
+/* Títulos de los gráficos */
+.chart-wrapper h3 {
+  margin-top: 0;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+/* index.css - Estilos para el selector de período */
+.period-selector {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.period-selector button {
+  padding: 10px 20px;
+  border: 2px solid #F0B90A;
+  background-color: #182339;
+  color: #F0B90A;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  font-size: 16px;
+}
+
+.period-selector button:hover {
+  background-color: #F0B90A;
+  color: #182339;
+}
+
+.period-selector button.active {
+  background-color: #F0B90A;
+  color: #182339;
 }
