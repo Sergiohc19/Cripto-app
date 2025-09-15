@@ -813,7 +813,6 @@ body.show-scroll::-webkit-scrollbar-thumb {
   }
 }
 
-
 /* ===== MÓVIL EXTREMADAMENTE PEQUEÑO (hasta 320px) — iPhone SE, antiguos Android ===== */
 @media (max-width: 320px) {
   html {
