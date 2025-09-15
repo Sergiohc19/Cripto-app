@@ -2,7 +2,7 @@
   --white: #fff;
   --primary-dark: #ffc507;
   --primary: #ffc400;
-  --black: #182339;
+  --black: #000000;
   --bg-overlay: rgba(255, 255, 255, 0.2);
   --border-light: rgba(255, 255, 255, 0.5);
 }
@@ -227,9 +227,9 @@ body.show-scroll::-webkit-scrollbar-thumb {
 /* Opciones individuales */
 .select-options li {
   padding: 1rem 1.2rem;
-  color: var(--white);
+  color: var(--black);
   font-size: 3rem;
-  font-weight: 700;
+  font-weight: bold;
   cursor: pointer;
   transition: background-color 0.2s, color 0.2s;
 

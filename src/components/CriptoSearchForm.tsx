@@ -114,7 +114,7 @@ export const CriptoSearchForm = () => {
 
       {/* Selector de Criptomoneda */}
       <div className="field">
-        <label>Criptomoneda:</label>
+        <label>Crypto:</label>
         <div
           ref={cryptoRef}
           className="custom-select"
