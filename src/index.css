@@ -733,3 +733,161 @@ body.show-scroll::-webkit-scrollbar-thumb {
     font-size: 12px;
   }
 }
+
+
+/* ===== MÓVIL MUY PEQUEÑO (hasta 375px) — iPhone Mini, Galaxy S8 ===== */
+@media (max-width: 375px) {
+  html {
+    font-size: 56%;
+  }
+
+  .app-title {
+    font-size: 2.2rem;
+    padding: 0 1rem;
+  }
+  .app-title span {
+    font-size: 2.6rem;
+  }
+
+  .content {
+    padding: 2.8rem 1rem;
+    font-size: 1.5rem;
+  }
+
+  .form label {
+    font-size: 1.4rem;
+  }
+
+  .select-trigger {
+    font-size: 1.4rem;
+    padding: 0.7rem;
+  }
+
+  .select-options li {
+    font-size: 1.25rem;
+    padding: 0.5rem 0.65rem;
+  }
+
+  .form [type="submit"] {
+    font-size: 1.4rem;
+    padding: 0.7rem;
+  }
+
+  .container-results {
+    padding: 0 1rem;
+    gap: 1.8rem;
+  }
+
+  .content-result,
+  .chart-container {
+    padding: 1rem;
+    font-size: 1.5rem;
+  }
+
+  .content-wrapper img {
+    max-width: 95%;
+    margin: 1rem auto;
+  }
+
+  .content-wrapper p {
+    font-size: 1.45rem;
+    margin: 1rem 0.6rem;
+  }
+
+  .content-wrapper span {
+    font-size: 1.9rem;
+  }
+
+  .chart-wrapper {
+    height: 220px;
+    padding: 1rem;
+  }
+
+  .chart-wrapper h3 {
+    font-size: 0.9rem;
+  }
+
+  .period-selector button {
+    padding: 5px 10px;
+    font-size: 11.5px;
+  }
+}
+
+
+/* ===== MÓVIL EXTREMADAMENTE PEQUEÑO (hasta 320px) — iPhone SE, antiguos Android ===== */
+@media (max-width: 320px) {
+  html {
+    font-size: 54%;
+  }
+
+  .app-title {
+    font-size: 2rem;
+    padding: 0 0.8rem;
+  }
+  .app-title span {
+    font-size: 2.4rem;
+  }
+
+  .content {
+    padding: 2.5rem 0.8rem;
+    font-size: 1.4rem;
+  }
+
+  .form label {
+    font-size: 1.3rem;
+  }
+
+  .select-trigger {
+    font-size: 1.3rem;
+    padding: 0.65rem;
+  }
+
+  .select-options li {
+    font-size: 1.2rem;
+    padding: 0.45rem 0.6rem;
+  }
+
+  .form [type="submit"] {
+    font-size: 1.3rem;
+    padding: 0.65rem;
+  }
+
+  .container-results {
+    padding: 0 0.8rem;
+    gap: 1.5rem;
+  }
+
+  .content-result,
+  .chart-container {
+    padding: 0.9rem;
+    font-size: 1.4rem;
+  }
+
+  .content-wrapper img {
+    max-width: 100%;
+    margin: 0.9rem auto;
+  }
+
+  .content-wrapper p {
+    font-size: 1.35rem;
+    margin: 0.9rem 0.5rem;
+  }
+
+  .content-wrapper span {
+    font-size: 1.8rem;
+  }
+
+  .chart-wrapper {
+    height: 200px;
+    padding: 0.9rem;
+  }
+
+  .chart-wrapper h3 {
+    font-size: 0.85rem;
+  }
+
+  .period-selector button {
+    padding: 4px 8px;
+    font-size: 10.5px;
+  }
+}
