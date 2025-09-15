@@ -29,6 +29,25 @@ body {
   font-size: 62.5%;
 }
 
+
+/* Scrollbar siempre presente */
+body::-webkit-scrollbar {
+  width: 10px;
+}
+
+body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #FFC400;
+  border-radius: 5px;
+  transform: translateX(10px);
+  /* fuera de la vista al inicio */
+  transition: transform 0.3s;
+}
+
+/* Firefox */
 body {
   font-family: 'Outfit', sans-serif;
   font-size: 2rem;
@@ -36,7 +55,17 @@ body {
   background-color: transparent;
   margin: 0;
   padding: 0;
+  scrollbar-width: thin;
+  scrollbar-color: #FFC400 transparent;
 }
+
+/* Mostrar scrollbar al hacer scroll */
+body.show-scroll::-webkit-scrollbar-thumb {
+  transform: translateX(0);
+  /* visible */
+}
+
+
 
 /* ======================
    FONDO DE VIDEO GLOBAL

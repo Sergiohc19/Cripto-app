@@ -6,7 +6,7 @@ import type { Pair } from "../types";
 
 // Lista de memecoins o tokens no deseados
 const MEMECOIN_BLACKLIST = [
-  "PEPE", "BONK", "WIF", "FLOKI", "TURBO", "MOG", "ELON", "SAITO", "MYRO", "BOME",
+  "PEPE","BONK", "WIF", "FLOKI", "TURBO", "MOG", "ELON", "SAITO", "MYRO", "BOME",
   "NFT", "NOT", "PENGU", "MOTHER", "HIPPO", "ACT", "SATS", "ORDI", "REDO", "MAGA",
   "TRUMP", "COQ", "DADDY", "HARAMBE", "WOJAK", "SC", "SHI", "MEX", "AIDOGE", "BANANA",
   "TOSHI", "DOGINME", "SPX", "BRETT", "NEIRO", "GORK", "SNEK", "FWOG", "GOAT", "DADDY",
@@ -15,8 +15,8 @@ const MEMECOIN_BLACKLIST = [
 
 // Ranking “Top 20 real” que queremos asegurar
 const TOP20_RANKING = [
-  "BTC", "ETH", "USDT", "BNB", "USDC", "XRP", "DOGE", "ADA", "SOL", "MATIC",
-  "DOT", "TRX", "AVAX", "LTC", "SHIB", "LINK", "ATOM", "WBTC", "XLM", "NEAR"
+  "BTC", "ETH", "USDT", "BNB", "SOL", "USDC", "XRP", "DOGE", "ADA", "SHIB",
+  "LINK", "AVAX", "DOT", "MATIC", "LTC", "WBTC", "BCH", "ATOM", "XLM", "NEAR"
 ];
 
 function getApiKey() {
@@ -63,7 +63,7 @@ export async function getCryptos() {
     let filtered = coins.filter(c => {
       const sym = getSymbol(c);
       const vol = getVolume(c);
-      if (!sym || vol < 20_000_000 || MEMECOIN_BLACKLIST.includes(sym)) return false;
+      if (!sym || vol < 15_000_000 || MEMECOIN_BLACKLIST.includes(sym)) return false;
       const result = CryptoCurrencyResponseSchema.safeParse(c);
       return result.success;
     });
