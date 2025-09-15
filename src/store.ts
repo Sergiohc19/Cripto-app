@@ -1,3 +1,4 @@
+// store.ts
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import type { CryptoCurrency, CryptoPrice, Pair } from "./types";
@@ -7,6 +8,7 @@ type CryptoStore = {
   pair: Pair | null;
   historyData: { time: number; close: number }[];
   isLoading: boolean;
+  cryptoLoading: boolean; // <-- Nuevo: estado de carga para criptos
   error: string | null;
   cryptocurrencies: CryptoCurrency[];
   result: CryptoPrice;
@@ -21,6 +23,7 @@ export const useCryptoStore = create<CryptoStore>()(
     cryptocurrencies: [],
     result: {} as CryptoPrice,
     isLoading: false,
+    cryptoLoading: false, // <-- Inicializado
     error: null,
     hasQuoted: false,
     pair: null,
@@ -29,14 +32,15 @@ export const useCryptoStore = create<CryptoStore>()(
     setHasQuoted: (value) => set(() => ({ hasQuoted: value })),
 
     fetchCryptos: async () => {
+      set({ cryptoLoading: true, error: null }); // <-- Activamos loading
       try {
         const cryptocurrencies = await getCryptos();
-        console.log("fetchCryptos - criptomonedas recibidas:", cryptocurrencies);
-        set(() => ({ cryptocurrencies }));
+        console.log("✅ Criptomonedas cargadas:", cryptocurrencies.length, "items");
+        set(() => ({ cryptocurrencies, cryptoLoading: false }));
       } catch (error) {
-        const message = (error as Error).message || "Error fetching cryptocurrencies";
-        console.error(message);
-        set({ error: message });
+        const message = (error as Error).message || "Error al cargar criptomonedas";
+        console.error("❌ Error en fetchCryptos:", message);
+        set({ error: message, cryptoLoading: false }); // <-- Mostramos error
       }
     },
 
@@ -54,8 +58,8 @@ export const useCryptoStore = create<CryptoStore>()(
           error: null,
         }));
       } catch (error) {
-        const message = (error as Error).message || "Error fetching data";
-        console.error(message);
+        const message = (error as Error).message || "Error al obtener datos";
+        console.error("❌ Error en fetchData:", message);
         set({
           error: message,
           isLoading: false,
