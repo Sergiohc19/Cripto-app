@@ -74,7 +74,11 @@ export async function getCryptos() {
 
   } catch (error) {
     console.error("❌ Error al obtener criptomonedas:", error);
-    throw new Error(`No se pudieron cargar las criptomonedas: ${error.message}`);
+    if (error instanceof Error) {
+      throw new Error(`No se pudieron cargar las criptomonedas: ${error.message}`);
+    } else {
+      throw new Error("No se pudieron cargar las criptomonedas: error desconocido");
+    }
   }
 }
 
