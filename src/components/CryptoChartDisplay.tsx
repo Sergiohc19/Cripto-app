@@ -134,9 +134,7 @@ export const CryptoChartDisplay = () => {
         displayColors: false,
         callbacks: {
           label: (context) => {
-            return `${context.dataset.label}: ${context.parsed.y.toFixed(2)} ${
-              pair.currency
-            }`;
+            return `${context.dataset.label}: ${context.parsed.y.toFixed(2)} ${pair.currency}`;
           },
         },
       },
@@ -168,7 +166,8 @@ export const CryptoChartDisplay = () => {
           },
         },
         ticks: {
-          maxTicksLimit: period === "24h" ? 12 : period === "7d" ? 7 : 6,
+          // 👇 Personalizado para cada período
+          maxTicksLimit: period === "24h" ? 12 : period === "7d" ? 7 : 4,
           autoSkip: true,
           color: "#182339",
           font: {
@@ -176,6 +175,9 @@ export const CryptoChartDisplay = () => {
             size: 16,
             family: "'Outfit', sans-serif",
           },
+          // 👇 Rotación solo en 30d para evitar superposición
+          rotation: period === "30d" ? -45 : 0,
+          align: period === "30d" ? "start" : "center",
         },
       },
       y: {
@@ -226,9 +228,7 @@ export const CryptoChartDisplay = () => {
         displayColors: false,
         callbacks: {
           label: (context) => {
-            return `${context.dataset.label}: ${context.parsed.y.toFixed(2)} ${
-              pair.currency
-            }`;
+            return `${context.dataset.label}: ${context.parsed.y.toFixed(2)} ${pair.currency}`;
           },
         },
       },
@@ -271,7 +271,7 @@ export const CryptoChartDisplay = () => {
       </div>
 
       <h3>Gráfico de Barras</h3>
-       <div className="chart-wrapper">
+      <div className="chart-wrapper">
         <Bar data={data} options={barOptions} />
       </div>
     </div>

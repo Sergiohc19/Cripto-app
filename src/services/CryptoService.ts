@@ -46,6 +46,7 @@ export async function getCryptos() {
       throw new Error(`'Data' no es un array. Tipo: ${typeof Data}`);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const filteredCryptos = Data.filter((item: any) => {
       const symbol = item?.CoinInfo?.Internal;
       const usdData = item?.RAW?.USD;
@@ -62,6 +63,7 @@ export async function getCryptos() {
 
     if (finalList.length < 30) {
       const remaining = 30 - finalList.length;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const backupCryptos = Data.filter((item: any) => {
         const symbol = item?.CoinInfo?.Internal;
         return symbol && !finalList.some(f => f.CoinInfo?.Internal === symbol);
@@ -126,6 +128,7 @@ export async function fetchCryptoHistory(pair: Pair, limit = 24) {
       throw new Error("Formato de datos histórico inválido");
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return rawData.map((point: any) => ({
       time: point.time,
       close: point.close,

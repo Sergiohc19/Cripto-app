@@ -170,6 +170,7 @@ body {
   max-height: 40vh;
   overflow-y: auto;
   background: rgba(255, 255, 255, 0.15);
+  color: var(--white);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-light);
@@ -198,7 +199,8 @@ body {
 /* Opciones individuales */
 .select-options li {
   padding: 1rem 1.2rem;
-  color: var(--black);
+  color: var(--white);
+  font-size: 3rem;
   font-weight: 700;
   cursor: pointer;
   transition: background-color 0.2s, color 0.2s;
@@ -281,7 +283,7 @@ body {
 }
 
 .container-results .chart-container {
-  min-width: 60rem;
+  min-width: 100rem;
   height: auto;
 }
 
