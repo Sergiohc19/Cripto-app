@@ -6,16 +6,18 @@ import type { Pair } from "../types";
 
 // Lista de memecoins o tokens no deseados
 const MEMECOIN_BLACKLIST = [
-  "PEPE","BONK","WIF","FLOKI","TURBO","MOG","ELON","SAITO","MYRO","BOME",
-  "NFT","NOT","PENGU","MOTHER","HIPPO","ACT","SATS","ORDI","REDO","MAGA",
-  "TRUMP","COQ","DADDY","HARAMBE","WOJAK","SC","SHI","MEX","AIDOGE","BANANA",
-  "TOSHI","DOGINME","SPX","BRETT","NEIRO","GORK","SNEK","FWOG","GOAT","DADDY",
-  "MUMU","RATS","POPCAT","MEW","CAT","HOT","ZEREBRO","LADYS","SILLY","BANAN"
+  "PEPE", "BONK", "WIF", "FLOKI", "TURBO", "MOG", "ELON", "SAITO", "MYRO", "BOME",
+  "NFT", "NOT", "PENGU", "MOTHER", "HIPPO", "ACT", "SATS", "ORDI", "REDO", "MAGA",
+  "TRUMP", "COQ", "DADDY", "HARAMBE", "WOJAK", "SC", "SHI", "MEX", "AIDOGE", "BANANA",
+  "TOSHI", "DOGINME", "SPX", "BRETT", "NEIRO", "GORK", "SNEK", "FWOG", "GOAT", "DADDY",
+  "MUMU", "RATS", "POPCAT", "MEW", "CAT", "HOT", "ZEREBRO", "LADYS", "SILLY", "BANAN"
 ];
 
 // Ranking “Top 20 real” que queremos asegurar
-const TOP20_RANKING = ["BTC","ETH","USDT","BNB","USDC","XRP","DOGE","ADA","SOL","MATIC",
-                       "DOT","TRX","AVAX","LTC","SHIB","LINK","ATOM","WBTC","XLM","NEAR"];
+const TOP20_RANKING = [
+  "BTC", "ETH", "USDT", "BNB", "USDC", "XRP", "DOGE", "ADA", "SOL", "MATIC",
+  "DOT", "TRX", "AVAX", "LTC", "SHIB", "LINK", "ATOM", "WBTC", "XLM", "NEAR"
+];
 
 function getApiKey() {
   const key = import.meta.env.VITE_CRYPTO_API_KEY;
@@ -23,9 +25,21 @@ function getApiKey() {
   return key;
 }
 
+// ✅ Interfaz corregida: todos los campos opcionales para evitar errores de TypeScript
 interface CryptoCompareCoin {
-  CoinInfo: { Name: string; Internal: string; FullName?: string; [key: string]: unknown };
-  RAW?: { USD: { VOLUME24HOURTO?: number; VOLUME24HOUR?: number; [key: string]: unknown } };
+  CoinInfo?: {
+    Name?: string;
+    Internal?: string;
+    FullName?: string;
+    [key: string]: unknown;
+  };
+  RAW?: {
+    USD?: {
+      VOLUME24HOURTO?: number;
+      VOLUME24HOUR?: number;
+      [key: string]: unknown;
+    };
+  };
   [key: string]: unknown;
 }
 
@@ -42,15 +56,16 @@ export async function getCryptos() {
     if (!Array.isArray(coins)) throw new Error("'Data' no es un array.");
 
     // Helpers
-    const getSymbol = (item: CryptoCompareCoin) => item?.CoinInfo?.Name || item?.CoinInfo?.Internal;
+    const getSymbol = (item: CryptoCompareCoin) => (item?.CoinInfo?.Name || item?.CoinInfo?.Internal)?.toUpperCase() || '';
     const getVolume = (item: CryptoCompareCoin) => item?.RAW?.USD?.VOLUME24HOURTO ?? item?.RAW?.USD?.VOLUME24HOUR ?? 0;
 
     // Filtro inicial: volumen mínimo + blacklist + schema
     let filtered = coins.filter(c => {
       const sym = getSymbol(c);
       const vol = getVolume(c);
-      return sym && vol >= 20_000_000 && !MEMECOIN_BLACKLIST.includes(sym.toUpperCase()) &&
-             CryptoCurrencyResponseSchema.safeParse(c).success;
+      if (!sym || vol < 20_000_000 || MEMECOIN_BLACKLIST.includes(sym)) return false;
+      const result = CryptoCurrencyResponseSchema.safeParse(c);
+      return result.success;
     });
 
     // ➤ Construir lista final basada en TOP20_RANKING
@@ -64,7 +79,9 @@ export async function getCryptos() {
     // ➤ Rellenar hasta 20 con otras monedas válidas
     for (const coin of filtered) {
       if (finalList.length >= 20) break;
-      if (!finalList.includes(coin)) finalList.push(coin);
+      if (!finalList.some(f => getSymbol(f) === getSymbol(coin))) {
+        finalList.push(coin);
+      }
     }
 
     console.log(`✅ Lista final contiene ${finalList.length} criptomonedas.`);
@@ -80,11 +97,12 @@ export async function getCryptos() {
 }
 
 // ================================
-// Otras funciones
+// Otras funciones — URLs CORREGIDAS (sin espacios)
 // ================================
 
 export async function fetchCurrentCryptoPrice(pair: Pair) {
   const apiKey = getApiKey();
+  // ✅ URL corregida: SIN ESPACIOS
   const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${pair.cryptocurrency}&tsyms=${pair.currency}&api_key=${apiKey}`;
   try {
     const response = await axios.get(url);
@@ -101,6 +119,7 @@ export async function fetchCurrentCryptoPrice(pair: Pair) {
 
 export async function fetchCryptoHistory(pair: Pair, limit = 24) {
   const apiKey = getApiKey();
+  // ✅ URL corregida: SIN ESPACIOS
   const url = `https://min-api.cryptocompare.com/data/v2/histohour?fsym=${pair.cryptocurrency}&tsym=${pair.currency}&limit=${limit}&api_key=${apiKey}`;
   try {
     const response = await axios.get(url);

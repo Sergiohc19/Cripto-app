@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import type { CryptoCurrency, CryptoPrice, Pair } from "./types";
@@ -36,9 +37,20 @@ export const useCryptoStore = create<CryptoStore>()(
     fetchCryptos: async () => {
       set({ cryptoLoading: true, error: null });
       try {
-        const cryptocurrencies = await getCryptos();
+        const fetchedCryptos = await getCryptos();
+        // Map or transform fetchedCryptos to match CryptoCurrency[]
+        const cryptocurrencies: CryptoCurrency[] = fetchedCryptos
+          .filter((c: any) => c.CoinInfo && c.CoinInfo.FullName && c.CoinInfo.Name)
+          .map((c: any) => ({
+            ...c,
+            CoinInfo: {
+              FullName: c.CoinInfo.FullName,
+              Name: c.CoinInfo.Name,
+              Internal: c.CoinInfo.Internal,
+            },
+          }));
         console.log("✅ Criptomonedas cargadas:", cryptocurrencies.length, "items");
-        set(() => ({ cryptocurrencies, cryptoLoading: false }));
+        set({ cryptocurrencies, cryptoLoading: false });
       } catch (error) {
         const message = (error as Error).message || "Error al cargar criptomonedas";
         console.error("❌ Error en fetchCryptos:", message);
