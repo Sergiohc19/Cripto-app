@@ -1,5 +1,4 @@
 // CryptoChartDisplay.tsx
-import { useState } from "react";
 import { useCryptoStore } from "../store";
 import { Line, Bar } from "react-chartjs-2";
 import "../index.css";
