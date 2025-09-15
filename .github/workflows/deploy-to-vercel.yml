@@ -31,11 +31,7 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Deploy to Vercel
-        uses: vercel/vercel-action@v2
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-        env:
-          CI: "true"
+    - name: Deploy to Vercel
+      uses: vercel/action@v2
+      env:
+        CI: "true"

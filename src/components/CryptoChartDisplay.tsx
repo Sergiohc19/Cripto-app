@@ -134,7 +134,9 @@ export const CryptoChartDisplay = () => {
         displayColors: false,
         callbacks: {
           label: (context) => {
-            return `${context.dataset.label}: ${context.parsed.y.toFixed(2)} ${pair.currency}`;
+            return `${context.dataset.label}: ${context.parsed.y.toFixed(2)} ${
+              pair.currency
+            }`;
           },
         },
       },
@@ -175,10 +177,10 @@ export const CryptoChartDisplay = () => {
             size: 16,
             family: "'Outfit', sans-serif",
           },
-          // 👇 Rotación solo en 30d para evitar superposición
-          rotation: period === "30d" ? -45 : 0,
-          align: period === "30d" ? "start" : "center",
+          align: period === "30d" ? "start" : "start",
         },
+        
+
       },
       y: {
         beginAtZero: false,
@@ -228,7 +230,9 @@ export const CryptoChartDisplay = () => {
         displayColors: false,
         callbacks: {
           label: (context) => {
-            return `${context.dataset.label}: ${context.parsed.y.toFixed(2)} ${pair.currency}`;
+            return `${context.dataset.label}: ${context.parsed.y.toFixed(2)} ${
+              pair.currency
+            }`;
           },
         },
       },
