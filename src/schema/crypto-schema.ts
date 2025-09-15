@@ -1,3 +1,4 @@
+// crypto-schema.ts
 import { z } from 'zod';
 
 export const CurrencySchema = z.object({
@@ -5,12 +6,14 @@ export const CurrencySchema = z.object({
     name: z.string()
 });
 
+// 👇 Esquema corregido: ahora permite campos adicionales (RAW, DISPLAY, etc.)
 export const CryptoCurrencyResponseSchema = z.object({
     CoinInfo: z.object({
         FullName: z.string(),
         Name: z.string(),
+        Internal: z.string().optional(), // <-- Añadido por si lo usas
     }),
-});
+}).passthrough(); // 👈 ¡CLAVE! Permite campos adicionales sin fallar
 
 export const CryptoCurrenciesResponseSchema = z.array(CryptoCurrencyResponseSchema);
 

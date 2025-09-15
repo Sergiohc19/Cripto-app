@@ -12,11 +12,11 @@ type CryptoStore = {
   cryptocurrencies: CryptoCurrency[];
   result: CryptoPrice;
   hasQuoted: boolean;
-  period: '24h' | '7d' | '30d'; // <-- Nuevo
+  period: '24h' | '7d' | '30d';
   setHasQuoted: (value: boolean) => void;
   fetchCryptos: () => Promise<void>;
-  fetchData: (pair: Pair, period?: '24h' | '7d' | '30d') => Promise<void>; // <-- Modificado
-  setPeriod: (period: '24h' | '7d' | '30d') => void; // <-- Nuevo
+  fetchData: (pair: Pair, period?: '24h' | '7d' | '30d') => Promise<void>;
+  setPeriod: (period: '24h' | '7d' | '30d') => void;
 };
 
 export const useCryptoStore = create<CryptoStore>()(
@@ -29,7 +29,7 @@ export const useCryptoStore = create<CryptoStore>()(
     hasQuoted: false,
     pair: null,
     historyData: [],
-    period: '24h', // <-- Valor inicial
+    period: '24h',
 
     setHasQuoted: (value) => set(() => ({ hasQuoted: value })),
 
@@ -37,8 +37,8 @@ export const useCryptoStore = create<CryptoStore>()(
       set({ cryptoLoading: true, error: null });
       try {
         const cryptocurrencies = await getCryptos();
-        console.log("fetchCryptos - criptomonedas recibidas:", cryptocurrencies);
-        set(() => ({ cryptocurrencies }));
+        console.log("✅ Criptomonedas cargadas:", cryptocurrencies.length, "items");
+        set(() => ({ cryptocurrencies, cryptoLoading: false }));
       } catch (error) {
         const message = (error as Error).message || "Error al cargar criptomonedas";
         console.error("❌ Error en fetchCryptos:", message);
@@ -47,14 +47,15 @@ export const useCryptoStore = create<CryptoStore>()(
     },
 
     fetchData: async (pair, period = get().period) => {
-      set({ isLoading: true, error: null });
+      console.log("🔍 fetchData - par:", pair, "período:", period); // 👈 Debug
+      set({ isLoading: true, error: null, historyData: [], result: {} as CryptoPrice }); // 👈 Reset
+
       try {
         const result = await fetchCurrentCryptoPrice(pair);
         
-        // Determinar cuántos puntos pedir según el período
-        let limit = 24; // default 24h
-        if (period === '7d') limit = 168; // 7 días * 24h
-        if (period === '30d') limit = 720; // 30 días * 24h
+        let limit = 24;
+        if (period === '7d') limit = 168;
+        if (period === '30d') limit = 720;
 
         const historyData = await fetchCryptoHistory(pair, limit);
 
@@ -62,13 +63,13 @@ export const useCryptoStore = create<CryptoStore>()(
           result,
           pair,
           historyData,
-          period, // <-- Guardamos el período
+          period,
           isLoading: false,
           error: null,
         });
       } catch (error) {
         const message = (error as Error).message || "Error fetching data";
-        console.error(message);
+        console.error("❌ Error en fetchData:", message);
         set({
           error: message,
           isLoading: false,
@@ -76,6 +77,6 @@ export const useCryptoStore = create<CryptoStore>()(
       }
     },
 
-    setPeriod: (period) => set({ period }), // <-- Setter
+    setPeriod: (period) => set({ period }),
   }))
 );

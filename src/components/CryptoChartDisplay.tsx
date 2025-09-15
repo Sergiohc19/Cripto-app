@@ -1,6 +1,7 @@
 // CryptoChartDisplay.tsx
 import { useCryptoStore } from "../store";
 import { Line, Bar } from "react-chartjs-2";
+import zoomPlugin from 'chartjs-plugin-zoom';
 import "../index.css";
 import {
   Chart as ChartJS,
@@ -22,7 +23,8 @@ ChartJS.register(
   LinearScale,
   TimeScale,
   Tooltip,
-  Legend
+  Legend,
+  zoomPlugin // 👈 Plugin de zoom registrado
 );
 
 export const CryptoChartDisplay = () => {
@@ -134,10 +136,27 @@ export const CryptoChartDisplay = () => {
         displayColors: false,
         callbacks: {
           label: (context) => {
-            return `${context.dataset.label}: ${context.parsed.y.toFixed(2)} ${
-              pair.currency
-            }`;
+            return `${context.dataset.label}: ${context.parsed.y.toFixed(2)} ${pair.currency}`;
           },
+        },
+      },
+      // 👇 PLUGIN DE ZOOM ACTIVADO
+      zoom: {
+        zoom: {
+          wheel: {
+            enabled: true, // Zoom con rueda del mouse
+          },
+          pinch: {
+            enabled: true, // Zoom con gestos táctiles
+          },
+          mode: 'x', // Solo zoom horizontal (mejor para series de tiempo)
+        },
+        pan: {
+          enabled: true, // Permitir arrastrar
+          mode: 'x',      // Solo pan horizontal
+        },
+        limits: {
+          x: { min: 'original', max: 'original' }, // Limitar zoom
         },
       },
     },
@@ -168,7 +187,6 @@ export const CryptoChartDisplay = () => {
           },
         },
         ticks: {
-          // 👇 Personalizado para cada período
           maxTicksLimit: period === "24h" ? 12 : period === "7d" ? 7 : 4,
           autoSkip: true,
           color: "#182339",
@@ -177,10 +195,9 @@ export const CryptoChartDisplay = () => {
             size: 16,
             family: "'Outfit', sans-serif",
           },
-          align: period === "30d" ? "start" : "start",
+          align: period === "30d" ? "start" : "center",
         },
-        
-
+        offset: false,
       },
       y: {
         beginAtZero: false,
@@ -230,11 +247,34 @@ export const CryptoChartDisplay = () => {
         displayColors: false,
         callbacks: {
           label: (context) => {
-            return `${context.dataset.label}: ${context.parsed.y.toFixed(2)} ${
-              pair.currency
-            }`;
+            return `${context.dataset.label}: ${context.parsed.y.toFixed(2)} ${pair.currency}`;
           },
         },
+      },
+      // 👇 PLUGIN DE ZOOM ACTIVADO
+      zoom: {
+        zoom: {
+          wheel: {
+            enabled: true,
+          },
+          pinch: {
+            enabled: true,
+          },
+          mode: 'x', // Solo zoom horizontal
+        },
+        pan: {
+          enabled: true,
+          mode: 'x', // Solo pan horizontal
+        },
+        limits: {
+          x: { min: 'original', max: 'original' },
+        },
+      },
+    },
+    elements: {
+      bar: {
+        categoryPercentage: 0.2,
+        barPercentage: 0.5,
       },
     },
   };
