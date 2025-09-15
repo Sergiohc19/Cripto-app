@@ -1,138 +1,112 @@
+/* eslint-disable no-extra-boolean-cast */
+/* eslint-disable prefer-const */
 import axios from "axios";
 import { CryptoCurrencyResponseSchema, CryptoPriceSchema } from "../schema/crypto-schema";
 import type { Pair } from "../types";
 
-// Lista de memecoins o tokens no deseados que queremos EXCLUIR
+// Lista de memecoins o tokens no deseados
 const MEMECOIN_BLACKLIST = [
-  "PEPE", "BONK", "WIF", "FLOKI", "TURBO", "MOG", "ELON", "SAITO", "MYRO", "BOME",
-  "NFT", "NOT", "PENGU", "MOTHER", "HIPPO", "ACT", "SATS", "ORDI", "REDO", "MAGA",
-  "TRUMP", "COQ", "DADDY", "HARAMBE", "WOJAK", "SC", "SHI", "MEX", "AIDOGE", "BANANA",
-  "TOSHI", "DOGINME", "SPX", "Brett", "NEIRO", "GORK", "SNEK", "FWOG", "GOAT", "DADDY",
-  "MUMU", "RATS", "POPCAT", "MEW", "CAT", "HOT", "ZEREBRO", "LADYS", "SILLY", "BANAN"
+  "PEPE","BONK","WIF","FLOKI","TURBO","MOG","ELON","SAITO","MYRO","BOME",
+  "NFT","NOT","PENGU","MOTHER","HIPPO","ACT","SATS","ORDI","REDO","MAGA",
+  "TRUMP","COQ","DADDY","HARAMBE","WOJAK","SC","SHI","MEX","AIDOGE","BANANA",
+  "TOSHI","DOGINME","SPX","BRETT","NEIRO","GORK","SNEK","FWOG","GOAT","DADDY",
+  "MUMU","RATS","POPCAT","MEW","CAT","HOT","ZEREBRO","LADYS","SILLY","BANAN"
 ];
+
+// Ranking “Top 20 real” que queremos asegurar
+const TOP20_RANKING = ["BTC","ETH","USDT","BNB","USDC","XRP","DOGE","ADA","SOL","MATIC",
+                       "DOT","TRX","AVAX","LTC","SHIB","LINK","ATOM","WBTC","XLM","NEAR"];
 
 function getApiKey() {
   const key = import.meta.env.VITE_CRYPTO_API_KEY;
-  if (!key) {
-    throw new Error("❌ API Key no configurada. Añade VITE_CRYPTO_API_KEY en tu archivo .env");
-  }
+  if (!key) throw new Error("❌ API Key no configurada. Añade VITE_CRYPTO_API_KEY en tu archivo .env");
   return key;
 }
 
+interface CryptoCompareCoin {
+  CoinInfo: { Name: string; Internal: string; FullName?: string; [key: string]: unknown };
+  RAW?: { USD: { VOLUME24HOURTO?: number; VOLUME24HOUR?: number; [key: string]: unknown } };
+  [key: string]: unknown;
+}
+
 export async function getCryptos() {
-  // ⬇️ CAMBIO CLAVE: limit=20 en lugar de 100
   const apiKey = getApiKey();
-  const url = `https://min-api.cryptocompare.com/data/top/mktcapfull?limit=20&tsym=USD&api_key=${apiKey}`;
+  const url = `https://min-api.cryptocompare.com/data/top/mktcapfull?limit=100&tsym=USD&api_key=${apiKey}`;
 
   try {
     const response = await axios.get(url);
-
-    // Diagnóstico
-    console.log("🔑 API Key cargada:", import.meta.env.VITE_CRYPTO_API_KEY ? "SÍ" : "NO");
+    console.log("🔑 API Key cargada:", !!apiKey ? "SÍ" : "NO");
     console.log("🔗 URL llamada:", url);
-    console.log("📡 Respuesta de CryptoCompare:", JSON.stringify(response.data, null, 2));
 
-    if (response.data.Response === "Error") {
-      throw new Error(`CryptoCompare Error: ${response.data.Message}`);
-    }
+    let coins: CryptoCompareCoin[] = response.data?.Data?.Coins ?? response.data?.Data ?? [];
+    if (!Array.isArray(coins)) throw new Error("'Data' no es un array.");
 
-    let Data = response.data?.Data;
+    // Helpers
+    const getSymbol = (item: CryptoCompareCoin) => item?.CoinInfo?.Name || item?.CoinInfo?.Internal;
+    const getVolume = (item: CryptoCompareCoin) => item?.RAW?.USD?.VOLUME24HOURTO ?? item?.RAW?.USD?.VOLUME24HOUR ?? 0;
 
-    if (Data && Data.Coins && Array.isArray(Data.Coins)) {
-      Data = Data.Coins;
-    }
-
-    if (!Array.isArray(Data)) {
-      throw new Error(`'Data' no es un array. Tipo: ${typeof Data}`);
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const filteredCryptos = Data.filter((item: any) => {
-      const symbol = item?.CoinInfo?.Internal;
-      const usdData = item?.RAW?.USD;
-
-      if (!symbol || !usdData) return false;
-      if (MEMECOIN_BLACKLIST.includes(symbol)) return false;
-      if ((usdData.VOLUME24HOURTO || 0) < 20_000_000) return false;
-
-      const result = CryptoCurrencyResponseSchema.safeParse(item);
-      return result.success;
+    // Filtro inicial: volumen mínimo + blacklist + schema
+    let filtered = coins.filter(c => {
+      const sym = getSymbol(c);
+      const vol = getVolume(c);
+      return sym && vol >= 20_000_000 && !MEMECOIN_BLACKLIST.includes(sym.toUpperCase()) &&
+             CryptoCurrencyResponseSchema.safeParse(c).success;
     });
 
-    let finalList = filteredCryptos.slice(0, 30);
+    // ➤ Construir lista final basada en TOP20_RANKING
+    const finalList: CryptoCompareCoin[] = [];
 
-    if (finalList.length < 30) {
-      const remaining = 30 - finalList.length;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const backupCryptos = Data.filter((item: any) => {
-        const symbol = item?.CoinInfo?.Internal;
-        return symbol && !finalList.some(f => f.CoinInfo?.Internal === symbol);
-      }).slice(0, remaining);
-
-      finalList = [...finalList, ...backupCryptos];
+    for (const symbol of TOP20_RANKING) {
+      const coin = filtered.find(c => getSymbol(c) === symbol);
+      if (coin) finalList.push(coin);
     }
+
+    // ➤ Rellenar hasta 20 con otras monedas válidas
+    for (const coin of filtered) {
+      if (finalList.length >= 20) break;
+      if (!finalList.includes(coin)) finalList.push(coin);
+    }
+
+    console.log(`✅ Lista final contiene ${finalList.length} criptomonedas.`);
+    console.log("📋 Criptos incluidas:", finalList.map(getSymbol));
 
     return finalList;
 
   } catch (error) {
     console.error("❌ Error al obtener criptomonedas:", error);
-    if (error instanceof Error) {
-      throw new Error(`No se pudieron cargar las criptomonedas: ${error.message}`);
-    } else {
-      throw new Error("No se pudieron cargar las criptomonedas: error desconocido");
-    }
+    if (error instanceof Error) throw new Error(`No se pudieron cargar las criptomonedas: ${error.message}`);
+    else throw new Error("No se pudieron cargar las criptomonedas: error desconocido");
   }
 }
+
+// ================================
+// Otras funciones
+// ================================
 
 export async function fetchCurrentCryptoPrice(pair: Pair) {
   const apiKey = getApiKey();
   const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${pair.cryptocurrency}&tsyms=${pair.currency}&api_key=${apiKey}`;
-
   try {
     const response = await axios.get(url);
-    const DISPLAY = response.data?.DISPLAY;
-
-    if (!DISPLAY) {
-      throw new Error("Respuesta inválida: DISPLAY no encontrado");
-    }
-
-    const priceData = DISPLAY[pair.cryptocurrency]?.[pair.currency];
-    if (!priceData) {
-      throw new Error(`Precio no disponible para ${pair.cryptocurrency}/${pair.currency}`);
-    }
-
+    const priceData = response.data?.DISPLAY?.[pair.cryptocurrency]?.[pair.currency];
+    if (!priceData) throw new Error(`Precio no disponible para ${pair.cryptocurrency}/${pair.currency}`);
     const result = CryptoPriceSchema.safeParse(priceData);
-
-    if (result.success) {
-      return result.data;
-    }
-
+    if (result.success) return result.data;
     throw new Error("No se pudo validar el precio.");
   } catch (error) {
     console.error("❌ Error al obtener precio:", error);
     throw new Error("No se pudo obtener el precio.");
   }
-
-  throw new Error("No se pudo obtener el precio.");
 }
 
 export async function fetchCryptoHistory(pair: Pair, limit = 24) {
   const apiKey = getApiKey();
   const url = `https://min-api.cryptocompare.com/data/v2/histohour?fsym=${pair.cryptocurrency}&tsym=${pair.currency}&limit=${limit}&api_key=${apiKey}`;
-
   try {
     const response = await axios.get(url);
     const rawData = response.data?.Data?.Data || [];
-
-    if (!Array.isArray(rawData)) {
-      throw new Error("Formato de datos histórico inválido");
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return rawData.map((point: any) => ({
-      time: point.time,
-      close: point.close,
-    }));
+    if (!Array.isArray(rawData)) throw new Error("Formato de datos histórico inválido");
+    return rawData.map((p: { time: number; close: number }) => ({ time: p.time, close: p.close }));
   } catch (error) {
     console.error("❌ Error al obtener histórico:", error);
     throw new Error("No se pudo obtener el histórico.");
