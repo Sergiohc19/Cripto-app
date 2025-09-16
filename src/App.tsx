@@ -35,6 +35,18 @@ export const App = () => {
   }, [fetchCryptos]);
 
 
+let scrollTimeout: ReturnType<typeof setTimeout>;
+
+window.addEventListener('scroll', () => {
+  document.body.classList.add('show-scroll');
+
+  clearTimeout(scrollTimeout);
+  scrollTimeout = setTimeout(() => {
+    document.body.classList.remove('show-scroll');
+  }, 1500); // barra visible 1.5s después de dejar de hacer scroll
+});
+
+
 
 
   return (

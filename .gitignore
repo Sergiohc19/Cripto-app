@@ -11,10 +11,19 @@ lerna-debug.log*
 .env
 
 # Build directories
+
+# Node.js dependencies
+
 node_modules
+
+# Builds
 dist
 dist-ssr
-*.local
+
+# Local environment files
+.env
+.env.local
+.env.*.local
 
 # Editor directories and files
 .vscode/*

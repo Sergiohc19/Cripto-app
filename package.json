@@ -1,5 +1,5 @@
 {
-  "name": "cripto-react-typescript",
+  "name": "crypto-value-tracker",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -13,6 +13,7 @@
     "axios": "^1.11.0",
     "chart.js": "^4.5.0",
     "chartjs-adapter-date-fns": "^3.0.0",
+    "chartjs-plugin-zoom": "^2.2.0",
     "react": "^19.1.1",
     "react-chartjs-2": "^5.3.0",
     "react-dom": "^19.1.1",
@@ -21,6 +22,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
+    "@types/chart.js": "^2.9.41",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
     "@vitejs/plugin-react-swc": "^4.0.0",

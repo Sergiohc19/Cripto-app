@@ -3,21 +3,20 @@ name: Deploy to Vercel
 on:
   push:
     branches:
-      - main  # Despliega en producción cuando se hace push a main
+      - main
   pull_request:
     branches:
-      - main  # Crea un preview deployment para cada PR que apunta a main
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    # Solo ejecutar si es push a main O si es PR hacia main (evita loops)
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main')
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Necesario para que vercel-action detecte bien el historial
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -26,16 +25,13 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci  # Más confiable que npm install en CI
+        run: npm ci
 
       - name: Build project
         run: npm run build
 
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
       - name: Deploy to Vercel
-        uses: vercel/vercel-action@v2
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-        env:
-          CI: "true"
+        run: vercel --prod --token ${{ secrets.VERCEL_TOKEN }} --yes --name crypto-value-tracker --confirm
