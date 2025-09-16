@@ -7,6 +7,10 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Config files
+.env
+
+# Build directories
 node_modules
 dist
 dist-ssr
