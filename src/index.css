@@ -387,7 +387,7 @@ body.show-scroll::-webkit-scrollbar-thumb {
 
 .content-wrapper span {
   font-weight: bold;
-  color: #daa701;
+  color: #b68c01;
   font-size: 2.8rem;
 }
 
@@ -449,6 +449,8 @@ body.show-scroll::-webkit-scrollbar-thumb {
   background-color: #F0B90A;
   color: #182339;
 }
+
+
 /* ===== TABLET (hasta 1024px) — COMPORTAMIENTO COMO MÓVIL ===== */
 @media (max-width: 1024px) {
   html {
@@ -890,3 +892,21 @@ body.show-scroll::-webkit-scrollbar-thumb {
     font-size: 10.5px;
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
