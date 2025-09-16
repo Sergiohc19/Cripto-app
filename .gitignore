@@ -7,7 +7,13 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Config files
+.env
+
+# Build directories
+
 # Node.js dependencies
+
 node_modules
 
 # Builds
